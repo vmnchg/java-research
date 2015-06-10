@@ -6,14 +6,14 @@ import java.util.Date;
 public class DateConverter {
     private static final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 
-    public void testConvert(String date) {
+    public void convert(String dateString) throws IllegalStateException {
         try {
-            Date d = df.parse(date);
-            String newDate = df.format(d);
-            if (!date.equals(newDate)) {
-                System.out.println(date + " converted to " + newDate);
+            Date date = df.parse(dateString);
+            String newDate = df.format(date);
+            if (!dateString.equals(newDate)) {
+                throw new IllegalStateException(dateString + " converted to " + newDate);
             }
-        } catch (Exception e) {
+        } catch (ParseException e) {
             System.out.println(e);
         }
     }

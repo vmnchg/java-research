@@ -5,15 +5,27 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 @RunWith(JUnit4.class)
 public class DateConverterTest {
-    private static void convert(ExecutorService pool, final String date) {
+    static ExecutorService pool = Executors.newCachedThreadPool();
+    static AtomicInteger atomicInteger = new AtomicInteger();
+
+    private static void submitToPool(ExecutorService pool, final String date) {
         pool.submit(new Runnable() {
             public void run() {
                 DateConverter dc = new DateConverter();
                 while (true) {
-                    dc.testConvert(date);
+                    try {
+                        dc.convert(date);
+                    } catch (IllegalStateException e) {
+                        atomicInteger.incrementAndGet();
+                    }
                 }
             }
         });
@@ -21,11 +33,20 @@ public class DateConverterTest {
 
     @Test
     public void shouldHaveWongkyDate() throws InterruptedException {
-        ExecutorService pool = Executors.newCachedThreadPool();
-        convert(pool, "1971/12/04");
-        convert(pool, "2001/09/02");
+        submitToPool(pool, "1971/12/04");
+        for (int i=0; i<50; i++) {
+            Thread.currentThread().sleep(100);
+            assertThat(atomicInteger.get(), is(0));
+        }
+    }
 
-        Thread.currentThread().sleep(5000);
+    @Test
+    public void shouldThrowException() throws InterruptedException {
+        submitToPool(pool, "1971/12/04");
+        submitToPool(pool, "2001/09/02");
+        for (int i=0; i<50; i++) {
+            Thread.currentThread().sleep(100);
+        }
+        assertThat(atomicInteger.get(), not(is(0)));
     }
 }
-
