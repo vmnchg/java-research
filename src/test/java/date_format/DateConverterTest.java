@@ -8,6 +8,7 @@ import org.junit.runners.JUnit4;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,6 +32,7 @@ public class DateConverterTest {
                             DateConverter.convert(date);
                         }
                     } catch (IllegalStateException e) {
+                        System.out.println(e);
                         atomicInteger.incrementAndGet();
                     }
                 }
@@ -45,6 +47,11 @@ public class DateConverterTest {
 
     @After
     public void after() {
+        try {
+            pool.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         pool.shutdown();
         boolean forcedShutdown = false;
         while (true) {
@@ -55,7 +62,7 @@ public class DateConverterTest {
     }
 
     @Test
-    public void shouldHaveWongkyDate() {
+    public void shouldConvertCorrectlyBecauseOnlyOneSubmitter() {
         assertThat(String.format("atomicInteger %d", atomicInteger.get()), atomicInteger.get(), is(0));
         submitToPool("1971/12/04", false);
         for (int i = 0; i < 50; i++) {
@@ -73,7 +80,7 @@ public class DateConverterTest {
         assertThat(String.format("atomicInteger %d", atomicInteger.get()), atomicInteger.get(), is(0));
         submitToPool("1971/12/04", false);
         submitToPool("2001/09/02", false);
-        submitToPool("2002/09/02", true);
+        submitToPool("2002/09/02", false);
         for (int i = 0; i < 50; i++) {
             try {
                 Thread.currentThread().sleep(100);
