@@ -15,6 +15,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Created by vmc on 16/06/2015.
+ * 172
+ */
+
 @RunWith(JUnit4.class)
 public class DateConverterTest {
     private ExecutorService pool;

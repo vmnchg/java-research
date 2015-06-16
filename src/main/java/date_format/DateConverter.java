@@ -4,8 +4,6 @@ import java.lang.ref.SoftReference;
 import java.text.*;
 import java.util.Date;
 
-// i172
-
 public class DateConverter {
     private static final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 

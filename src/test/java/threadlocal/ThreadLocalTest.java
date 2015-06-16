@@ -9,11 +9,9 @@ import org.junit.runners.JUnit4;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 /**
- * Created by vchhieng on 16/06/2015.
+ * Created by vmc on 16/06/2015.
+ * 164
  */
 
 @RunWith(JUnit4.class)
