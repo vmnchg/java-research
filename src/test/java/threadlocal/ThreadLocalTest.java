@@ -34,30 +34,32 @@ public class ThreadLocalTest extends TestCase {
     }
 
     @Test
-    public void test1() {
+    public void threadLocalRemoveMethodWillReleaseObjectFromMemory() {
         ThreadLocalUser user = new ThreadLocalUser();
         MyValue value = new MyValue(1);
         user.setThreadLocal(value);
-        user.clear();
+        user.clear(); // vmc:this is where remove is called
         value = null;
         collectGarbage();
+
         assertTrue(ThreadLocalUtil.myValueFinalized);
         assertFalse(ThreadLocalUtil.threadLocalUserFinalized);
         assertFalse(ThreadLocalUtil.threadLocalExtensionFinalized);
     }
 
-    // weird case
     @Test
-    public void test2() {
+    public void nullifyAnObjectContainsThreadLocalWillNotReleaseObjectOnThreadLocalFromMemory() {
         ThreadLocalUser user = new ThreadLocalUser();
         MyValue value = new MyValue(1);
         user.setThreadLocal(value);
         value = null;
-        user = null;
+        user = null; // this is where the nullify happens
         collectGarbage();
+
         assertFalse(ThreadLocalUtil.myValueFinalized);
-        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+        // did not expect this to be true. sun might do something clever to cascade null.
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
     }
 
     @Test
@@ -72,9 +74,10 @@ public class ThreadLocalTest extends TestCase {
         });
         Thread.sleep(100);
         collectGarbage();
+
         assertFalse(ThreadLocalUtil.myValueFinalized);
-        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
     }
 
     @Test
@@ -89,12 +92,12 @@ public class ThreadLocalTest extends TestCase {
         collectGarbage();
 
         assertFalse(ThreadLocalUtil.myValueFinalized);
-        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
     }
 
     @Test
-    public void test6() throws Exception {
+    public void shouldClearMyValueAfterThreadLocalUser() throws Exception {
         for (int i = 0; i < 100; i++) {
             ThreadLocalUser user = new ThreadLocalUser(i);
             MyValue value = new MyValue(i);
@@ -105,8 +108,8 @@ public class ThreadLocalTest extends TestCase {
         }
 
         assertTrue(ThreadLocalUtil.myValueFinalized);
-        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
     }
 }
 
