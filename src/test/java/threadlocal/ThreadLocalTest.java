@@ -16,7 +16,9 @@ import java.util.concurrent.Executors;
 
 @RunWith(JUnit4.class)
 public class ThreadLocalTest extends TestCase {
-    private void collectGarbage() {
+    private static final int MEGABYTE = 1024 * 1024;
+
+    private void gc() {
         for (int i = 0; i < 10; i++) {
             System.gc();
             try {
@@ -28,6 +30,18 @@ public class ThreadLocalTest extends TestCase {
         }
     }
 
+    private void increaseMemoryThenGC() {
+        final int TOTAL_MEGA_BYTE = 32;
+        final int memory = MEGABYTE * TOTAL_MEGA_BYTE;
+        byte[] bytes = new byte[memory];
+
+        for (int i = 0 ; i<memory; i++) {
+            bytes[i] = (byte) i;
+        }
+        gc();
+    }
+
+
     @Before
     public void setup() {
         ThreadLocalUtil.setUp();
@@ -35,31 +49,41 @@ public class ThreadLocalTest extends TestCase {
 
     @Test
     public void threadLocalRemoveMethodWillReleaseObjectFromMemory() {
-        ThreadLocalUser user = new ThreadLocalUser();
-        MyValue value = new MyValue(1);
+        ThreadLocalUser user = new ThreadLocalUser(1);
+        MyObject value = new MyObject(1);
         user.setThreadLocal(value);
-        user.clear(); // vmc:this is where remove is called
+        user.remove(); // vmc:this is where remove is called
         value = null;
-        collectGarbage();
+        increaseMemoryThenGC();
 
         assertTrue(ThreadLocalUtil.myValueFinalized);
         assertFalse(ThreadLocalUtil.threadLocalUserFinalized);
         assertFalse(ThreadLocalUtil.threadLocalExtensionFinalized);
+
+        increaseMemoryThenGC();
+        ThreadLocalUtil.printMyThreadLocalFinalized();
+        ThreadLocalUtil.printThreadLocalUserFinalized();
+
     }
 
     @Test
     public void nullifyAnObjectContainsThreadLocalWillNotReleaseObjectOnThreadLocalFromMemory() {
-        ThreadLocalUser user = new ThreadLocalUser();
-        MyValue value = new MyValue(1);
+        ThreadLocalUser user = new ThreadLocalUser(1);
+        MyObject value = new MyObject(1);
         user.setThreadLocal(value);
         value = null;
         user = null; // this is where the nullify happens
-        collectGarbage();
+        increaseMemoryThenGC();
 
         assertFalse(ThreadLocalUtil.myValueFinalized);
+        ThreadLocalUtil.printMyValueFinalized();
+
         // did not expect this to be true. sun might do something clever to cascade null.
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+
+        increaseMemoryThenGC();
+        ThreadLocalUtil.printMyValueFinalized();
     }
 
     @Test
@@ -67,49 +91,66 @@ public class ThreadLocalTest extends TestCase {
         Executor singlePool = Executors.newSingleThreadExecutor();
         singlePool.execute(new Runnable() {
             public void run() {
-                ThreadLocalUser user = new ThreadLocalUser();
-                MyValue value = new MyValue(1);
+                ThreadLocalUser user = new ThreadLocalUser(1);
+                MyObject value = new MyObject(1);
                 user.setThreadLocal(value);
             }
         });
         Thread.sleep(100);
-        collectGarbage();
+        increaseMemoryThenGC();
 
         assertFalse(ThreadLocalUtil.myValueFinalized);
+        ThreadLocalUtil.printMyValueFinalized();
+
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+
+        increaseMemoryThenGC();
+        ThreadLocalUtil.printMyValueFinalized();
     }
 
     @Test
     public void test5() throws Exception {
         for (int i = 0; i < 100; i++) {
             ThreadLocalUser user = new ThreadLocalUser(i);
-            MyValue value = new MyValue(i);
+            MyObject value = new MyObject(i);
             user.setThreadLocal(value);
             value = null;
             user = null;
         }
-        collectGarbage();
+
+        Thread.sleep(1000);
+        gc();
 
         assertFalse(ThreadLocalUtil.myValueFinalized);
+        ThreadLocalUtil.printMyValueFinalized();
+
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+
+        increaseMemoryThenGC();
+        ThreadLocalUtil.printMyValueFinalized();
     }
 
     @Test
-    public void shouldClearMyValueAfterThreadLocalUser() throws Exception {
+    public void shouldThreadLocalUserIsFinalizedFirstThenMyValueIsFinalized() throws Exception {
         for (int i = 0; i < 100; i++) {
             ThreadLocalUser user = new ThreadLocalUser(i);
-            MyValue value = new MyValue(i);
+            MyObject value = new MyObject(i);
             user.setThreadLocal(value);
             value = null;
             user = null;
-            collectGarbage();
+            increaseMemoryThenGC();
         }
 
-        assertTrue(ThreadLocalUtil.myValueFinalized);
+        assertFalse(ThreadLocalUtil.myValueFinalized);
+        ThreadLocalUtil.printMyValueFinalized();
+
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+
+        increaseMemoryThenGC();
+        ThreadLocalUtil.printMyValueFinalized();
     }
 }
 

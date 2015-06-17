@@ -5,28 +5,25 @@ package threadlocal;
  */
 public class ThreadLocalUser {
     private final int num;
-    private ThreadLocalExtension<MyValue> value =
-            new ThreadLocalExtension<MyValue>();
-
-    public ThreadLocalUser() {
-        this(0);
-    }
+    private ThreadLocalExtension<MyObject> value;
 
     public ThreadLocalUser(int num) {
+        ThreadLocalUtil.threadLocalUserFinalizedCounter++;
         this.num = num;
+        value = new ThreadLocalExtension<MyObject>(num);
     }
 
     protected void finalize() throws Throwable {
-        System.out.println("ThreadLocalUser.finalize " + num);
+//        System.out.println("ThreadLocalUser.finalize " + num);
         ThreadLocalUtil.setThreadLocalUserFinalized();
         super.finalize();
     }
 
-    public void setThreadLocal(MyValue myValue) {
-        value.set(myValue);
+    public void setThreadLocal(MyObject myObject) {
+        value.set(myObject);
     }
 
-    public void clear() {
+    public void remove() {
         value.remove();
     }
 }
