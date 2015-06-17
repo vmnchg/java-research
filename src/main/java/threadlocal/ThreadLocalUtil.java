@@ -4,21 +4,21 @@ package threadlocal;
  * Created by vchhieng on 16/06/2015.
  */
 public class ThreadLocalUtil {
-    static boolean myObjectFinalized;
-    static int myValueFinalizedCounter = 0;
+    boolean myObjectFinalized;
+    int myObjectFinalizedCounter = 0;
 
-    static boolean threadLocalUserFinalized;
-    static int threadLocalUserFinalizedCounter = 0;
+    boolean threadLocalUserFinalized;
+    int threadLocalUserFinalizedCounter = 0;
 
-    static boolean threadLocalExtensionFinalized;
-    static int threadLocalExtensionFinalizedCounter = 0;
+    boolean threadLocalExtensionFinalized;
+    int threadLocalExtensionFinalizedCounter = 0;
 
-    static boolean threadExtensionFinalized;
-    static int threadExtensionFinalizedCounter = 0;
+    boolean threadExtensionFinalized;
+    int threadExtensionFinalizedCounter = 0;
 
-    public static synchronized void setUp() {
+    public ThreadLocalUtil() {
         myObjectFinalized = false;
-        myValueFinalizedCounter = 0;
+        myObjectFinalizedCounter = 0;
         threadLocalUserFinalized = false;
         threadLocalUserFinalizedCounter = 0;
         threadLocalExtensionFinalized = false;
@@ -27,44 +27,44 @@ public class ThreadLocalUtil {
         threadExtensionFinalizedCounter = 0;
     }
 
-    public static synchronized void setMyValueFinalized() {
-        myValueFinalizedCounter--;
-        if (myValueFinalizedCounter == 0)    {
+    public synchronized void setMyValueFinalized() {
+        myObjectFinalizedCounter--;
+        if (myObjectFinalizedCounter == 0)    {
             myObjectFinalized = true;
         }
     }
-    public static synchronized void printMyValueFinalized() {
-        System.out.println("Remaining myValueFinalizedCounter " + myValueFinalizedCounter);
+    public synchronized void printMyValueFinalized() {
+        System.out.println("Remaining myObjectFinalizedCounter " + myObjectFinalizedCounter);
 
     }
-    public static synchronized void setThreadLocalUserFinalized() {
+    public synchronized void setThreadLocalUserFinalized() {
         threadLocalUserFinalizedCounter--;
         if (threadLocalUserFinalizedCounter == 0) {
             threadLocalUserFinalized = true;
         }
     }
-    public static synchronized void printThreadLocalUserFinalized() {
+    public synchronized void printThreadLocalUserFinalized() {
         System.out.println("Remaining threadLocalUserFinalizedCounter " + threadLocalUserFinalizedCounter);
     }
-    public static synchronized void setThreadLocalExtensionFinalized() {
+    public synchronized void setThreadLocalExtensionFinalized() {
         threadLocalExtensionFinalizedCounter--;
         if (threadLocalExtensionFinalizedCounter == 0) {
             threadLocalExtensionFinalized = true;
         }
     }
 
-    public static synchronized void printThreadLocalExtensionFinalized() {
+    public synchronized void printThreadLocalExtensionFinalized() {
         System.out.println("Remaining threadLocalExtensionFinalizedCounter " + threadLocalExtensionFinalizedCounter);
     }
 
-    public static synchronized void setThreadExtensionFinalized() {
+    public synchronized void setThreadExtensionFinalized() {
         threadExtensionFinalizedCounter--;
         if (threadExtensionFinalizedCounter == 0) {
             threadExtensionFinalized = true;
         }
     }
 
-    public static synchronized void printThreadExtensionFinalized() {
+    public synchronized void printThreadExtensionFinalized() {
         System.out.println("Remaining threadExtensionFinalizedCounter " + threadExtensionFinalizedCounter);
     }
 }
