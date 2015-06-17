@@ -15,7 +15,7 @@ public class ThreadLocalExtension<T> extends ThreadLocal<T> {
 
     protected void finalize() throws Throwable {
 //        System.out.println("ThreadLocalExtension.finalize " + num);
-        ThreadLocalUtil.setMyThreadLocalFinalized();
+        ThreadLocalUtil.setThreadLocalExtensionFinalized();
         super.finalize();
     }
 }

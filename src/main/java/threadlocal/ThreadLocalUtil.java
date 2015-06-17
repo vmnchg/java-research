@@ -6,11 +6,15 @@ package threadlocal;
 public class ThreadLocalUtil {
     static boolean myValueFinalized;
     static int myValueFinalizedCounter = 0;
+
     static boolean threadLocalUserFinalized;
     static int threadLocalUserFinalizedCounter = 0;
+
     static boolean threadLocalExtensionFinalized;
     static int threadLocalExtensionFinalizedCounter = 0;
 
+    static boolean threadExtensionFinalized;
+    static int threadExtensionFinalizedCounter = 0;
 
     public static void setUp() {
         myValueFinalized = false;
@@ -37,16 +41,25 @@ public class ThreadLocalUtil {
     public static void printThreadLocalUserFinalized() {
         System.out.println("Remaining threadLocalUserFinalizedCounter " + threadLocalUserFinalizedCounter);
     }
-    public static void setMyThreadLocalFinalized() {
+    public static void setThreadLocalExtensionFinalized() {
         threadLocalExtensionFinalizedCounter--;
         if (threadLocalExtensionFinalizedCounter == 0) {
             threadLocalExtensionFinalized = true;
         }
     }
 
-    public static void printMyThreadLocalFinalized() {
+    public static void printThreadLocalExtensionFinalized() {
         System.out.println("Remaining threadLocalExtensionFinalizedCounter " + threadLocalExtensionFinalizedCounter);
     }
 
+    public static void setThreadExtensionFinalized() {
+        threadExtensionFinalizedCounter--;
+        if (threadExtensionFinalizedCounter == 0) {
+            threadExtensionFinalized = true;
+        }
+    }
 
+    public static void printThreadExtensionFinalized() {
+        System.out.println("Remaining threadExtensionFinalizedCounter " + threadExtensionFinalizedCounter);
+    }
 }

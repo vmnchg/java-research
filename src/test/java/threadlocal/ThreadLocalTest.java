@@ -61,7 +61,7 @@ public class ThreadLocalTest extends TestCase {
         assertFalse(ThreadLocalUtil.threadLocalExtensionFinalized);
 
         increaseMemoryThenGC();
-        ThreadLocalUtil.printMyThreadLocalFinalized();
+        ThreadLocalUtil.printThreadLocalExtensionFinalized();
         ThreadLocalUtil.printThreadLocalUserFinalized();
 
     }
@@ -84,6 +84,25 @@ public class ThreadLocalTest extends TestCase {
 
         increaseMemoryThenGC();
         ThreadLocalUtil.printMyValueFinalized();
+    }
+
+    @Test
+    public void test3() throws InterruptedException {
+        Thread t = new MyThread(new Runnable() {
+            public void run() {
+                ThreadLocalUser user = new ThreadLocalUser(1);
+                MyObject value = new MyObject(1);
+                user.setThreadLocal(value);
+            }
+        });
+        t.start();
+        t.join();
+        increaseMemoryThenGC();
+        assertTrue(ThreadLocalUtil.myValueFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
+        assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
+
+        assertFalse(ThreadLocalUtil.threadExtensionFinalized);
     }
 
     @Test
