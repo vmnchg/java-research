@@ -47,7 +47,7 @@ public class ThreadLocalTest extends TestCase {
         ThreadLocalUtil.setUp();
     }
 
-    @Test
+//    @Test
     public void threadLocalRemoveMethodWillReleaseObjectFromMemory() {
         ThreadLocalUser user = new ThreadLocalUser(1);
         MyObject value = new MyObject(1);
@@ -56,7 +56,7 @@ public class ThreadLocalTest extends TestCase {
         value = null;
         increaseMemoryThenGC();
 
-        assertTrue(ThreadLocalUtil.myValueFinalized);
+        assertTrue(ThreadLocalUtil.myObjectFinalized);
         assertFalse(ThreadLocalUtil.threadLocalUserFinalized);
         assertFalse(ThreadLocalUtil.threadLocalExtensionFinalized);
 
@@ -66,7 +66,7 @@ public class ThreadLocalTest extends TestCase {
 
     }
 
-    @Test
+//    @Test
     public void nullifyAnObjectContainsThreadLocalWillNotReleaseObjectOnThreadLocalFromMemory() {
         ThreadLocalUser user = new ThreadLocalUser(1);
         MyObject value = new MyObject(1);
@@ -75,7 +75,7 @@ public class ThreadLocalTest extends TestCase {
         user = null; // this is where the nullify happens
         increaseMemoryThenGC();
 
-        assertFalse(ThreadLocalUtil.myValueFinalized);
+        assertFalse(ThreadLocalUtil.myObjectFinalized);
         ThreadLocalUtil.printMyValueFinalized();
 
         // did not expect this to be true. sun might do something clever to cascade null.
@@ -88,24 +88,32 @@ public class ThreadLocalTest extends TestCase {
 
     @Test
     public void test3() throws InterruptedException {
-        Thread t = new MyThread(new Runnable() {
+        Thread t = new ThreadExtension(new Runnable() {
             public void run() {
-                ThreadLocalUser user = new ThreadLocalUser(1);
-                MyObject value = new MyObject(1);
-                user.setThreadLocal(value);
+                for (int i=0;i<100;i++) {
+                    ThreadLocalUser user = new ThreadLocalUser(i);
+                    MyObject value = new MyObject(i);
+                    user.setThreadLocal(value);
+
+                    value = null;
+                    user = null;
+                    gc();
+                }
             }
         });
         t.start();
         t.join();
+
         increaseMemoryThenGC();
-        assertTrue(ThreadLocalUtil.myValueFinalized);
+
+        assertTrue(ThreadLocalUtil.myObjectFinalized);
         assertTrue(ThreadLocalUtil.threadLocalUserFinalized);
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
 
         assertFalse(ThreadLocalUtil.threadExtensionFinalized);
     }
 
-    @Test
+//    @Test
     public void test4() throws InterruptedException {
         Executor singlePool = Executors.newSingleThreadExecutor();
         singlePool.execute(new Runnable() {
@@ -118,7 +126,7 @@ public class ThreadLocalTest extends TestCase {
         Thread.sleep(100);
         increaseMemoryThenGC();
 
-        assertFalse(ThreadLocalUtil.myValueFinalized);
+        assertFalse(ThreadLocalUtil.myObjectFinalized);
         ThreadLocalUtil.printMyValueFinalized();
 
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
@@ -128,7 +136,7 @@ public class ThreadLocalTest extends TestCase {
         ThreadLocalUtil.printMyValueFinalized();
     }
 
-    @Test
+//    @Test
     public void test5() throws Exception {
         for (int i = 0; i < 100; i++) {
             ThreadLocalUser user = new ThreadLocalUser(i);
@@ -141,7 +149,7 @@ public class ThreadLocalTest extends TestCase {
         Thread.sleep(1000);
         gc();
 
-        assertFalse(ThreadLocalUtil.myValueFinalized);
+        assertFalse(ThreadLocalUtil.myObjectFinalized);
         ThreadLocalUtil.printMyValueFinalized();
 
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
@@ -162,7 +170,7 @@ public class ThreadLocalTest extends TestCase {
             increaseMemoryThenGC();
         }
 
-        assertFalse(ThreadLocalUtil.myValueFinalized);
+        assertFalse(ThreadLocalUtil.myObjectFinalized);
         ThreadLocalUtil.printMyValueFinalized();
 
         assertTrue(ThreadLocalUtil.threadLocalExtensionFinalized);
