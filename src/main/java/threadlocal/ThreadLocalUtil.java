@@ -33,8 +33,8 @@ public class ThreadLocalUtil {
             myObjectFinalized = true;
         }
     }
-    public synchronized void printMyValueFinalized() {
-        System.out.println("Remaining myObjectFinalizedCounter " + myObjectFinalizedCounter);
+    public synchronized void printMyValueFinalized(String methodName) {
+        System.out.println(methodName + " Remaining myObjectFinalizedCounter " + myObjectFinalizedCounter);
 
     }
     public synchronized void setThreadLocalUserFinalized() {
@@ -43,8 +43,8 @@ public class ThreadLocalUtil {
             threadLocalUserFinalized = true;
         }
     }
-    public synchronized void printThreadLocalUserFinalized() {
-        System.out.println("Remaining threadLocalUserFinalizedCounter " + threadLocalUserFinalizedCounter);
+    public synchronized void printThreadLocalUserFinalized(String methodName) {
+        System.out.println(methodName + " Remaining threadLocalUserFinalizedCounter " + threadLocalUserFinalizedCounter);
     }
     public synchronized void setThreadLocalExtensionFinalized() {
         threadLocalExtensionFinalizedCounter--;
@@ -53,8 +53,8 @@ public class ThreadLocalUtil {
         }
     }
 
-    public synchronized void printThreadLocalExtensionFinalized() {
-        System.out.println("Remaining threadLocalExtensionFinalizedCounter " + threadLocalExtensionFinalizedCounter);
+    public synchronized void printThreadLocalExtensionFinalized(String methodName) {
+        System.out.println(methodName + " Remaining threadLocalExtensionFinalizedCounter " + threadLocalExtensionFinalizedCounter);
     }
 
     public synchronized void setThreadExtensionFinalized() {
@@ -64,7 +64,7 @@ public class ThreadLocalUtil {
         }
     }
 
-    public synchronized void printThreadExtensionFinalized() {
-        System.out.println("Remaining threadExtensionFinalizedCounter " + threadExtensionFinalizedCounter);
+    public synchronized void printThreadExtensionFinalized(String methodName) {
+        System.out.println(methodName + " Remaining threadExtensionFinalizedCounter " + threadExtensionFinalizedCounter);
     }
 }

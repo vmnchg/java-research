@@ -71,8 +71,8 @@ public class ThreadLocalTest extends TestCase {
         assertFalse(threadLocalUtil.threadLocalExtensionFinalized);
 
         increaseMemoryThenGC();
-        threadLocalUtil.printThreadLocalExtensionFinalized();
-        threadLocalUtil.printThreadLocalUserFinalized();
+        threadLocalUtil.printThreadLocalExtensionFinalized("test1");
+        threadLocalUtil.printThreadLocalUserFinalized("test1");
     }
 
     @Test
@@ -85,14 +85,14 @@ public class ThreadLocalTest extends TestCase {
         increaseMemoryThenGC();
 
         assertFalse(threadLocalUtil.myObjectFinalized);
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test2");
 
         // did not expect this to be true. sun might do something clever to cascade null.
         assertTrue(threadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(threadLocalUtil.threadLocalUserFinalized);
 
         increaseMemoryThenGC();
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test2");
     }
 
     @Test
@@ -133,13 +133,13 @@ public class ThreadLocalTest extends TestCase {
         increaseMemoryThenGC();
 
         assertFalse(threadLocalUtil.myObjectFinalized);
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test4");
 
         assertTrue(threadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(threadLocalUtil.threadLocalUserFinalized);
 
         increaseMemoryThenGC();
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test4");
     }
 
     @Test
@@ -156,13 +156,13 @@ public class ThreadLocalTest extends TestCase {
         gc();
 
         assertFalse(threadLocalUtil.myObjectFinalized);
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test5");
 
         assertTrue(threadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(threadLocalUtil.threadLocalUserFinalized);
 
         increaseMemoryThenGC();
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test5");
     }
 
     @Test
@@ -177,13 +177,13 @@ public class ThreadLocalTest extends TestCase {
         }
 
         assertFalse(threadLocalUtil.myObjectFinalized);
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test6");
 
         assertTrue(threadLocalUtil.threadLocalExtensionFinalized);
         assertTrue(threadLocalUtil.threadLocalUserFinalized);
 
         increaseMemoryThenGC();
-        threadLocalUtil.printMyValueFinalized();
+        threadLocalUtil.printMyValueFinalized("test6");
     }
 }
 

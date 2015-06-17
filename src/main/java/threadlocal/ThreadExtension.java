@@ -12,7 +12,7 @@ public class ThreadExtension extends Thread {
         this.threadLocalUtil.threadExtensionFinalizedCounter++;
     }
     protected void finalize() throws Throwable {
-        System.out.println("ThreadExtension.finalize" + threadLocalUtil.threadExtensionFinalizedCounter);
+//        System.out.println("ThreadExtension.finalize" + threadLocalUtil.threadExtensionFinalizedCounter);
         threadLocalUtil.setThreadExtensionFinalized();
         super.finalize();
     }
