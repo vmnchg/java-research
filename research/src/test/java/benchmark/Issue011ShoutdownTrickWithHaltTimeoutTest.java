@@ -9,7 +9,7 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class Issue011ShoutdownTrickWithHaltTimeoutTest {
-    @Test
+//    @Test
     public void shouldNotShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
