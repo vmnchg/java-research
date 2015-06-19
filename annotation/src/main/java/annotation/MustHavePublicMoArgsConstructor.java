@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface NoArgsConstructor {
+public @interface MustHavePublicMoArgsConstructor {
 }

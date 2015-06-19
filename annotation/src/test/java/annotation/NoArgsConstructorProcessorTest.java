@@ -5,7 +5,7 @@ package annotation;
  */
 public class NoArgsConstructorProcessorTest {
 
-    @NoArgsConstructor
+    @MustHavePublicMoArgsConstructor
     public abstract class NoArgsSuperClass {
         public NoArgsSuperClass() {
         }
@@ -29,8 +29,8 @@ public class NoArgsConstructorProcessorTest {
         public SeveralConstructors(int ai) {
         }
 
-        public SeveralConstructors() {
-        }
+    /*    public SeveralConstructors() {
+        }*/
     }
 
     // Fails
