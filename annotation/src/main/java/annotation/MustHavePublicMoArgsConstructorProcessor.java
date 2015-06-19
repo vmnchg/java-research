@@ -10,7 +10,7 @@ import java.util.Set;
 
 @SupportedAnnotationTypes("annotation.MustHavePublicMoArgsConstructor")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class NoArgsConstructorProcessor extends AbstractProcessor {
+public class MustHavePublicMoArgsConstructorProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations,
                            RoundEnvironment env) {
         for (TypeElement type : annotations) {
