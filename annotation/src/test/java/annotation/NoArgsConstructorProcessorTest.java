@@ -29,8 +29,8 @@ public class NoArgsConstructorProcessorTest {
         public SeveralConstructors(int ai) {
         }
 
-    /*    public SeveralConstructors() {
-        }*/
+        public SeveralConstructors() {
+        }
     }
 
     // Fails
