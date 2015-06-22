@@ -54,7 +54,7 @@ public class ThreadLocalTest extends TestCase {
 
     @After
     public void after() throws InterruptedException {
-        Thread.sleep(10000);
+        Thread.sleep(1000);
     }
 
     @Test
@@ -152,7 +152,6 @@ public class ThreadLocalTest extends TestCase {
             user = null;
         }
 
-        Thread.sleep(1000);
         gc();
 
         assertFalse(threadLocalUtil.myObjectFinalized);
