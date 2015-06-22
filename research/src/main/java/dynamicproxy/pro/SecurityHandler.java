@@ -1,6 +1,6 @@
 package dynamicproxy.pro;
 
-import dynamicproxy.logic.SecurityChecker;
+import dynamicproxy.expert.SecurityChecker;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.InvocationHandler;

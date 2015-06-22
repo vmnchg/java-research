@@ -1,7 +1,7 @@
 package dynamicproxy.naive;
 
 import dynamicproxy.SalaryImp;
-import dynamicproxy.logic.SecurityChecker;
+import dynamicproxy.expert.SecurityChecker;
 
 /**
  * Created by vchhieng on 19/06/2015.

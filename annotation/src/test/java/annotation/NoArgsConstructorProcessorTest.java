@@ -33,7 +33,7 @@ public class NoArgsConstructorProcessorTest {
         }
     }
 
-    // Fails
+/*    // Fails
     public class NonPublicConstructor extends NoArgsSuperClass {
         NonPublicConstructor() {
         }
@@ -43,5 +43,5 @@ public class NoArgsConstructorProcessorTest {
     public class WrongConstructor extends NoArgsSuperClass {
         public WrongConstructor(String aString) {
         }
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-package dynamicproxy.logic;
+package dynamicproxy.expert;
 
 import java.security.Permission;
 

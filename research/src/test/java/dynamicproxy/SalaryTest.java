@@ -13,31 +13,23 @@ import org.junit.runners.JUnit4;
 public class SalaryTest {
     private Salary salary;
 
-    @Before
-    public void before() {
-
-    }
-
     @Test(expected = SecurityException.class)
     public void shouldThrowException() {
-        SalaryImp salaryImp = new SalaryImp(10000000);
-        salary = (Salary)
-                java.lang.reflect.Proxy.newProxyInstance(
-                        Salary.class.getClassLoader(),
-                        new Class[]{Salary.class},
-                        new SecurityHandler(salaryImp));
+        salary = SalaryImp.makeSalary(10000000);
         salary.getAmount();
     }
 
+/*
+    @Test(expected = SecurityException.class)
+    public void shouldThrowException2() {
+        salary = SalaryImp.makeSalary(10000000);
+        salary.getAmount2();
+    }
+*/
+
     @Test
     public void shouldNotThrowException() {
-
-        SalaryImp salaryImp = new SalaryImp(100);
-        salary = (Salary)
-                java.lang.reflect.Proxy.newProxyInstance(
-                        Salary.class.getClassLoader(),
-                        new Class[]{Salary.class},
-                        new SecurityHandler(salaryImp));
+        salary = SalaryImp.makeSalary(100);
         salary.getAmount();
     }
 }
