@@ -10,22 +10,21 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SalaryTest {
 
-
     @Test(expected = SecurityException.class)
     public void shouldThrowException() {
-        Salary salary = SalaryImp.makeSalary(10000000);
+        Salary salary = SalaryBuilder.makeSalary(10000000);
         salary.getAmount();
     }
 
     @Test
     public void shouldNotThrowException() {
-        Salary salary = SalaryImp.makeSalary(100);
+        Salary salary = SalaryBuilder.makeSalary(100);
         salary.getAmount();
     }
 
     @Test(expected = SecurityException.class)
     public void shouldThrowException2() {
-        Salary2 salary = SalaryImp.makeSalary2(10000000);
+        Salary2 salary = SalaryBuilder.makeSalary2(2000000);
         salary.getAmount2();
     }
 
