@@ -27,7 +27,11 @@ public class SecurityHandler implements InvocationHandler {
             // call framework and then reflect the app-logic
             final AnnotatedType annotatedReturnType = method.getAnnotatedReturnType();
 
-            if (method.getName().startsWith("getAmount")) {
+            if (method.getName().equals("getAmount")) {
+                final Object returnObject = method.invoke(realObject, arguments);
+                sc.check((Long) returnObject);
+                return returnObject;
+            } else if (method.getName().equals("getAmount2")) {
                 final Object returnObject = method.invoke(realObject, arguments);
                 sc.check((Long) returnObject);
                 return returnObject;
