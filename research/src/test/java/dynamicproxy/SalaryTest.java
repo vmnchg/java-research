@@ -6,6 +6,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Created by vchhieng on 22/06/2015.
+ * 005
  */
 @RunWith(JUnit4.class)
 public class SalaryTest {
