@@ -60,8 +60,8 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
         return future;
     }
 
-    protected void afterExecute(Runnable r, Throwable t) {
-        ScheduledFuture future = (ScheduledFuture) r;
+    protected void afterExecute(Runnable runnable, Throwable t) {
+        ScheduledFuture future = (ScheduledFuture) runnable;
         // future.isDone() is always false for scheduled tasks,
         // unless there was an exception
         if (future.isDone()) {
@@ -69,7 +69,7 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
                 future.get();
             } catch (ExecutionException e) {
                 Throwable problem = e.getCause();
-                FixedRateParameters parms = runnables.remove(r);
+                FixedRateParameters parms = runnables.remove(runnable); // it is really a future
                 if (problem != null && parms != null) {
                     boolean resubmitThisTask =
                             handler.exceptionOccurred(problem);
@@ -83,5 +83,4 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
             }
         }
     }
-
 }
