@@ -23,8 +23,14 @@ public class ResubmittingScheduledThreadPoolExecutorTest {
     }
 
     private static class MyExceptionRunnable implements Runnable {
+        private final String identifier;
+
+        private MyExceptionRunnable(String identifier) {
+            this.identifier = identifier;
+        }
+
         public void run() {
-           throw new IllegalStateException("I have a problem");
+            throw new IllegalStateException(identifier);
         }
     }
 
@@ -65,14 +71,14 @@ public class ResubmittingScheduledThreadPoolExecutorTest {
         final MyScheduledExceptionHandler exceptionHandler = new MyScheduledExceptionHandler();
         final int initialDelay = 1;
         final int numberOfRetry = 5;
-        final int period = 2;
+        final int period = 1;
 
         final ScheduledExecutorService resubmittingScheduledThreadPoolExecutor = new ResubmittingScheduledThreadPoolExecutor(
                 numberOfRetry, exceptionHandler);
 
-        resubmittingScheduledThreadPoolExecutor.scheduleAtFixedRate(new MyExceptionRunnable(), initialDelay, period, TimeUnit.SECONDS);
+        resubmittingScheduledThreadPoolExecutor.scheduleAtFixedRate(new MyExceptionRunnable("I have a problem"), initialDelay, period, TimeUnit.SECONDS);
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(11 + 1));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(6 + 1));
 
         assertThat(exceptionHandler.problems.get(), is(numberOfRetry));
     }

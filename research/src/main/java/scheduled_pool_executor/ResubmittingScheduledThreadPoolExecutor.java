@@ -68,14 +68,14 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
             try {
                 future.get();
             } catch (ExecutionException e) {
-                Throwable problem = e.getCause();
-                FixedRateParameters parms = runnables.remove(runnable); // it is really a future
-                if (problem != null && parms != null) {
+                final Throwable problem = e.getCause();
+                final FixedRateParameters fixedRateParameters = runnables.remove(runnable); // it is really a future
+                if (problem != null && fixedRateParameters != null) {
                     boolean resubmitThisTask =
                             handler.exceptionOccurred(problem);
                     if (resubmitThisTask) {
-                        scheduleAtFixedRate(parms.command, parms.period,
-                                parms.period, parms.unit);
+                        scheduleAtFixedRate(fixedRateParameters.command, fixedRateParameters.period,
+                                fixedRateParameters.period, fixedRateParameters.unit);
                     }
                 }
             } catch (InterruptedException e) {
