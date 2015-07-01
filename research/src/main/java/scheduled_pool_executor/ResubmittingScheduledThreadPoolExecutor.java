@@ -11,20 +11,22 @@ import java.util.concurrent.TimeUnit;
  * Created by vchhieng on 23/06/2015.
  */
 public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor {
-    /** Default exception handler, always reschedules */
-    private static final ScheduledExceptionHandler NULL_HANDLER =
-            new ScheduledExceptionHandler() {
-                public boolean exceptionOccurred(Throwable e) {
-                    return true;
-                }
-            };
-    private final Map<Object, FixedRateParameters> runnables =
-            new IdentityHashMap<Object, FixedRateParameters>();
+    /**
+     * Default exception handler, always reschedules
+     */
+    private static final ScheduledExceptionHandler NULL_HANDLER = new ScheduledExceptionHandler() {
+        public boolean exceptionOccurred(Throwable e) {
+            return true;
+        }
+    };
+
+    private final Map<Object, FixedRateParameters> runnables = new IdentityHashMap<Object, FixedRateParameters>();
+
     private final ScheduledExceptionHandler handler;
 
     /**
      */
-    public ResubmittingScheduledThreadPoolExecutor(int poolSize) {
+    private ResubmittingScheduledThreadPoolExecutor(int poolSize) {
         this(poolSize, NULL_HANDLER);
     }
 
@@ -35,33 +37,30 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
     }
 
     private class FixedRateParameters {
-        private Runnable command;
-        private long period;
-        private TimeUnit unit;
+        final private Runnable command;
+        final private long period;
+        final private TimeUnit unit;
+        final private int numberOfRuns;
 
         /**
          * We do not need initialDelay, since we can set it to period
          */
-        public FixedRateParameters(Runnable command, long period,
-                                   TimeUnit unit) {
+        public FixedRateParameters(Runnable command, long period, TimeUnit unit, int numberOfRuns) {
             this.command = command;
             this.period = period;
             this.unit = unit;
+            this.numberOfRuns = numberOfRuns;
         }
     }
 
-    public ScheduledFuture<?> scheduleAtFixedRate(
-            Runnable command, long initialDelay, long period,
-            TimeUnit unit) {
-        ScheduledFuture<?> future = super.scheduleAtFixedRate(
-                command, initialDelay, period, unit);
-        runnables.put(future,
-                new FixedRateParameters(command, period, unit));
+    private ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit, int numberOfRuns) {
+        final ScheduledFuture<?> future = super.scheduleAtFixedRate(command, initialDelay, period, unit);
+        runnables.put(future, new FixedRateParameters(command, period, unit, numberOfRuns));
         return future;
     }
 
     protected void afterExecute(Runnable runnable, Throwable t) {
-        ScheduledFuture future = (ScheduledFuture) runnable;
+        final ScheduledFuture future = (ScheduledFuture) runnable;
         // future.isDone() is always false for scheduled tasks,
         // unless there was an exception
         if (future.isDone()) {
@@ -75,7 +74,7 @@ public class ResubmittingScheduledThreadPoolExecutor extends ScheduledThreadPool
                             handler.exceptionOccurred(problem);
                     if (resubmitThisTask) {
                         scheduleAtFixedRate(fixedRateParameters.command, fixedRateParameters.period,
-                                fixedRateParameters.period, fixedRateParameters.unit);
+                                fixedRateParameters.period, fixedRateParameters.unit, fixedRateParameters.numberOfRuns - 1);
                     }
                 }
             } catch (InterruptedException e) {
