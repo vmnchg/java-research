@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(JUnit4.class)
 public class ResubmittingScheduledThreadPoolExecutorTest {
+
     private static class MyRunnable implements Runnable {
         public void run() {
            System.out.println("I'm happy");
@@ -36,8 +37,12 @@ public class ResubmittingScheduledThreadPoolExecutorTest {
     }
 
     private static class MyScheduledExceptionHandler
-            implements ScheduledExceptionHandler {
+            extends ScheduledExceptionHandler {
         private AtomicInteger problems = new AtomicInteger();
+
+        private MyScheduledExceptionHandler() {
+            super(5);
+        }
 
         public boolean exceptionOccurred(Throwable e) {
             e.printStackTrace();
