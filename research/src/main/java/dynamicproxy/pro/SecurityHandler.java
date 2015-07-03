@@ -13,10 +13,10 @@ public class SecurityHandler implements InvocationHandler {
     final Object realObject;
 
     /**
-     * contructor accepts the real subject
+     * constructor accepts the realObject subject
      */
-    public SecurityHandler(Object real) {
-        realObject = real;
+    public SecurityHandler(Object realObject) {
+        this.realObject = realObject;
     }
 
     /**
