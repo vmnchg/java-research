@@ -8,11 +8,14 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(JUnit4.class)
 public class ThreadMemoryTest {
-
+    private final int ONE_MB = (1024 * 1024);
     @Test
     public void shouldCalculateMemoryPerThread() {
+        System.out.println(String.format("prior %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
         long subStringPoorPerformance = performSubStringPoorPerformance();
+        System.out.println(String.format("after poor performance %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
         long subStringOptimal = performSubStringOptimal();
+        System.out.println(String.format("after optimal performance %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
         assertTrue(subStringOptimal < subStringPoorPerformance);
     }
 
@@ -28,7 +31,6 @@ public class ThreadMemoryTest {
                     i * 1000, i * 1000 + 1000);
         }
         bytes = ThreadMemory.threadAllocatedBytes() - bytes;
-        System.out.println(String.format("current %d\n", ThreadMemory.threadAllocatedBytes()));
         return bytes;
     }
 
@@ -44,7 +46,7 @@ public class ThreadMemoryTest {
                     i * 1000, i * 1000 + 1000);
         }
         bytes = ThreadMemory.threadAllocatedBytes() - bytes;
-        System.out.println(String.format("current %d\n", ThreadMemory.threadAllocatedBytes()));
+
         return bytes;
     }
 }
