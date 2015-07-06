@@ -7,16 +7,22 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class CompleteService {
-    int                        NTHREADS = 10;
-    ExecutorService            exec     = Executors.newFixedThreadPool(NTHREADS);
-    CompletionService<Integer> completionService = new ExecutorCompletionService<Integer>(exec);
-    Logger logger = Logger.getLogger(CompleteService.class.getName());
+    final int numberOfThreads;
+    final ExecutorService executorService;
+    final CompletionService<Integer> completionService;
+    final Logger logger = Logger.getLogger(CompleteService.class.getName());
 
-    public void sampleCompleteService(int runs) {
+    public CompleteService(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
+        this.executorService = Executors.newFixedThreadPool(this.numberOfThreads);
+        this.completionService = new ExecutorCompletionService<Integer>(executorService);
+    }
+
+    public int sampleCompleteService(int runs) {
+        int total = 0;
         for (int i = runs; i > 0; i--) {
             Counting<Integer> c = new Counting<Integer>(i);
             Future<Integer> ft = completionService.submit(c);
@@ -32,20 +38,15 @@ public class CompleteService {
             // e.printStackTrace();
             // }
         }
-        try {
-            Thread.currentThread().sleep(TimeUnit.SECONDS.toSeconds(5000));
-            System.out.println("just finished sleeping");
-        } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+
         try {
             for (int i = runs; i > 0; i--) {
-                System.out.printf("- calling  completionService.take(). ft take, i %2d\n", i);
+                System.out.printf("- calling  completionService.take(). ft take, counter %2d\n", i);
                 Future<Integer> ft = completionService.take();
-                System.out.printf("+ received completionService.take(). ft take, i %2d get %2d\n", i, ft.get());
+                total += ft.get();
+                System.out.printf("+ received completionService.take(). ft take, counter %2d tasknumber %2d\n", i, ft.get());
             }
-            exec.shutdown();
+            executorService.shutdown();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -53,10 +54,8 @@ public class CompleteService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        return total;
     }
-
-
 }
 
 class Counting<T> implements Callable<T> {
@@ -71,14 +70,14 @@ class Counting<T> implements Callable<T> {
     public T call() {
         for (int i = 0; i < input; i++) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.printf("call %s, [%2d < %2d]\n", Thread.currentThread(), i, input);
+            System.out.printf("callable %s, [i=%2d < input=%2d]\n", Thread.currentThread(), i, input);
         }
-        System.out.printf("Thread finishing [%2d] \n", input);
+        System.out.printf("callable finished input=[%2d] \n", input);
         return (T) new Integer(input);
     }
 }
