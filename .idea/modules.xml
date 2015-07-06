@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/annotation/annotation.iml" filepath="$PROJECT_DIR$/annotation/annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java-concurrency/src/main/java-concurrency.iml" filepath="$PROJECT_DIR$/java-concurrency/src/main/java-concurrency.iml" />
       <module fileurl="file://$PROJECT_DIR$/java-research.iml" filepath="$PROJECT_DIR$/java-research.iml" />
       <module fileurl="file://$PROJECT_DIR$/research/research.iml" filepath="$PROJECT_DIR$/research/research.iml" />
     </modules>
