@@ -8,9 +8,9 @@ import javax.lang.model.util.SimpleTypeVisitor6;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
-@SupportedAnnotationTypes("annotation.MustHavePublicMoArgsConstructor")
+@SupportedAnnotationTypes("annotation.MustHavePublicNoArgsConstructor")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class MustHavePublicMoArgsConstructorProcessor extends AbstractProcessor {
+public class MustHavePublicNoArgsConstructorProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations,
                            RoundEnvironment env) {
         for (TypeElement type : annotations) {

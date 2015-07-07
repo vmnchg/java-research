@@ -5,7 +5,7 @@ package annotation;
  */
 public class NoArgsConstructorProcessorTest {
 
-    @MustHavePublicMoArgsConstructor
+    @MustHavePublicNoArgsConstructor
     public abstract class NoArgsSuperClass {
         public NoArgsSuperClass() {
         }
