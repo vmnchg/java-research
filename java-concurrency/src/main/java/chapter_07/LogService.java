@@ -31,7 +31,6 @@ public class LogService {
         synchronized (this) {
             if (isShutdown)
                 throw new IllegalStateException(); // throw back to client side
-
             size++;
         }
 
@@ -61,15 +60,5 @@ public class LogService {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        int MESSAGESIZE = 10;
-        LogService ls = new LogService(MESSAGESIZE);
-        ls.start();
-        for (int i = 0; i < MESSAGESIZE * 2; i++) {
-            ls.log(String.format("log.%2d\n", i));
-        }
-        ls.stop();
     }
 }
