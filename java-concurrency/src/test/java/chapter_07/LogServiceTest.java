@@ -16,7 +16,7 @@ public class LogServiceTest {
         LogService ls = new LogService(MESSAGESIZE);
         ls.start();
         ls.stop();
-        ls.log(String.format("log.%2d\n", "1"));
+        ls.log("log.");
     }
 
     @Test
@@ -25,7 +25,7 @@ public class LogServiceTest {
         LogService ls = new LogService(MESSAGESIZE);
         ls.start();
         for (int i=0 ; i<20; i++) {
-            ls.log(String.format("log.%2d\n", "1"));
+            ls.log(String.format("log.%2d\n", i));
         }
         ls.stop();
     }
