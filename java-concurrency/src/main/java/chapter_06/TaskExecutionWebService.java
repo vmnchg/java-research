@@ -4,10 +4,9 @@ import java.util.concurrent.*;
 
 public class TaskExecutionWebService {
     private int numberOfThreads = 0;
+    final ExecutorService execService;
 
-    ExecutorService execService;
-
-    private Executor exec;
+    private final Executor executor;
     private final Executor execTaskWithNewThread;
     private final Executor execTaskWithExitingThread;
 
@@ -15,35 +14,9 @@ public class TaskExecutionWebService {
         this.numberOfThreads = numberOfThreads;
         this.execService = Executors.newFixedThreadPool(numberOfThreads);
 
-        this.exec = Executors.newFixedThreadPool(this.numberOfThreads);
+        this.executor = Executors.newFixedThreadPool(this.numberOfThreads);
         this.execTaskWithNewThread = new ThreadPerTaskExecutor();
         this.execTaskWithExitingThread = new WithinThreadExecutor();
-    }
-
-    public void executor_callable(Callable<Object> task) {
-        Future<Object> future = execService.submit(task);
-        try {
-            Object object = future.get();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public void executor_task(Runnable task) {
-        Future<?> future = execService.submit(task);
-        try {
-            Object object = future.get();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 }
 

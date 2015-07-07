@@ -1,15 +1,19 @@
 package chapter_06;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -88,5 +92,20 @@ public class TaskExecutionWebServiceTest {
             };
             taskExecutionWebService.execService.execute(task);
         }
+    }
+
+    @Test
+    public void shouldWaitBeforeExecuteAnotherTask() throws ExecutionException, InterruptedException {
+        final int callableResultExpected = 1;
+        taskExecutionWebService = new TaskExecutionWebService(1);
+        final Callable<Integer> task = new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Thread.sleep(1000);
+                return callableResultExpected;
+            }
+        };
+        Future<Integer> future = taskExecutionWebService.execService.submit(task);
+        assertThat(callableResultExpected, is(future.get()));
     }
 }
