@@ -8,10 +8,14 @@ import util.StopWatch;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,7 +35,7 @@ public class ExecutorConfigurationTest {
     }
 
     @Test
-    public void shouldTest() throws InterruptedException {
+    public void shouldWaitForTheCompletionOfAllTasksWhenInvokeAllIsUsed() throws InterruptedException {
         List<Callable<Integer>> tasks = new LinkedList<Callable<Integer>>();
         int numberOfCallable = 10;
         int sleepingTime = 1000;
