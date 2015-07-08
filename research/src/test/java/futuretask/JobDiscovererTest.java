@@ -33,8 +33,8 @@ public class JobDiscovererTest {
                     } catch (InterruptedException consumeAndExit) {
                         System.out.println(Thread.currentThread().getName() +
                                 identifier + " was interrupted - exiting");
+                    messages.add(identifier + " await but terminated task");
                     }
-                    messages.add(identifier + " done");
                 }
 
                 public String toString() {
@@ -50,8 +50,8 @@ public class JobDiscovererTest {
                     } catch (InterruptedException consumeAndExit) {
                         System.out.println(Thread.currentThread().getName() +
                                 identifier + " was interrupted - exiting");
+                    messages.add(identifier + " await but terminated task");
                     }
-                    messages.add(identifier + " done");
                     return "success";
                 }
 

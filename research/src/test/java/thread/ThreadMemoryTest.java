@@ -10,13 +10,16 @@ import static junit.framework.TestCase.assertTrue;
 // 230
 public class ThreadMemoryTest {
     private final int ONE_MB = (1024 * 1024);
+
     @Test
     public void shouldCalculateMemoryPerThread() {
         System.out.println(String.format("prior %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
         long subStringPoorPerformance = performSubStringPoorPerformance();
+
         System.out.println(String.format("after poor performance %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
         long subStringOptimal = performSubStringOptimal();
         System.out.println(String.format("after optimal performance %dMB\n", ThreadMemory.threadAllocatedBytes()/ ONE_MB));
+
         assertTrue(subStringOptimal < subStringPoorPerformance);
     }
 
