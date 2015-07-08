@@ -3,7 +3,7 @@ package examples;
 import java.util.concurrent.*;
 
 /**
- * TimedRun
+ * _ScheduledExecutorService
  * <p/>
  * Cancelling a task using Future
  *
