@@ -7,16 +7,14 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ShutdownHook {
     public void addShutdownHook() throws InterruptedException {
-        CountDownLatch countDownLatch=new CountDownLatch(1);
+        final CountDownLatch countDownLatch=new CountDownLatch(1);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 System.out.println("Shutdown hook ran!");
+                countDownLatch.countDown();
             }
         });
-
-        while (true) {
-            Thread.sleep(1000);
-        }
+        countDownLatch.await();
     }
 }
