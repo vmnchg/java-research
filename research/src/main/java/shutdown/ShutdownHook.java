@@ -6,15 +6,28 @@ import java.util.concurrent.CountDownLatch;
  * Created by vmc on 9/07/15.
  */
 public class ShutdownHook {
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
+
     public void addShutdownHook() throws InterruptedException {
-        final CountDownLatch countDownLatch=new CountDownLatch(1);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                System.out.println("Shutdown hook ran!");
-                countDownLatch.countDown();
+                try {
+                    System.out.println("start cleanup task");
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shutdownCleanUpTask();
             }
         });
-        countDownLatch.await();
+    }
+
+    void shutdownCleanUpTask() {
+        System.out.println("finish cleanup task");
+    }
+
+    void notifyTaskIsFinished() {
+        countDownLatch.countDown();
     }
 }
